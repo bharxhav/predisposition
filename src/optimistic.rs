@@ -54,6 +54,21 @@ impl Default for OptimisticBool {
     }
 }
 
+#[cfg(feature = "serde")]
+impl serde::Serialize for OptimisticBool {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for OptimisticBool {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let s = <&str>::deserialize(deserializer)?;
+        s.parse().map_err(serde::de::Error::custom)
+    }
+}
+
 impl core::ops::Not for OptimisticBool {
     type Output = crate::PessimisticBool;
 

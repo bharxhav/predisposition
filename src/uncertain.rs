@@ -45,6 +45,21 @@ impl Default for UncertainBool {
     }
 }
 
+#[cfg(feature = "serde")]
+impl serde::Serialize for UncertainBool {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for UncertainBool {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let s = <&str>::deserialize(deserializer)?;
+        s.parse().map_err(serde::de::Error::custom)
+    }
+}
+
 impl core::ops::Not for UncertainBool {
     type Output = Self;
 
