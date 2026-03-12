@@ -29,6 +29,20 @@ impl PartialEq for PessimisticBool {
 
 impl Eq for PessimisticBool {}
 
+impl Ord for PessimisticBool {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        let lhs = matches!(self, Self::True);
+        let rhs = matches!(other, Self::True);
+        lhs.cmp(&rhs)
+    }
+}
+
+impl PartialOrd for PessimisticBool {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl core::hash::Hash for PessimisticBool {
     fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         // Hash the resolved bool so Hash is consistent with Eq

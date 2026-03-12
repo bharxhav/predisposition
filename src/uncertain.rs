@@ -16,6 +16,29 @@ pub enum UncertainBool {
     None,
 }
 
+impl Ord for UncertainBool {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        // None < False < True (mirrors Option<bool>)
+        let lhs = match self {
+            Self::None => 0,
+            Self::False => 1,
+            Self::True => 2,
+        };
+        let rhs = match other {
+            Self::None => 0,
+            Self::False => 1,
+            Self::True => 2,
+        };
+        lhs.cmp(&rhs)
+    }
+}
+
+impl PartialOrd for UncertainBool {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl core::fmt::Display for UncertainBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
