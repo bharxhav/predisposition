@@ -6,6 +6,7 @@
 /// the unknown case.
 ///
 
+#[derive(Debug)]
 pub enum UncertainBool {
     /// Explicitly true (`Some(true)`).
     True,
@@ -13,6 +14,29 @@ pub enum UncertainBool {
     False,
     /// Unknown (`Option::None`) no assumption is made.
     None,
+}
+
+impl core::fmt::Display for UncertainBool {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::True => f.write_str("true"),
+            Self::False => f.write_str("false"),
+            Self::None => f.write_str("none"),
+        }
+    }
+}
+
+impl core::str::FromStr for UncertainBool {
+    type Err = crate::ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            "none" => Ok(Self::None),
+            _ => Err(crate::ParseError { _priv: () }),
+        }
+    }
 }
 
 impl Default for UncertainBool {
