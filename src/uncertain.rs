@@ -18,9 +18,9 @@ pub enum UncertainBool {
 
 // -------------------- identity --------------------
 
+/// Orders `None < False < True`, mirroring [`Option<bool>`].
 impl Ord for UncertainBool {
     fn cmp(&self, other: &Self) -> core::cmp::Ordering {
-        // None < False < True (mirrors Option<bool>)
         let lhs = match self {
             Self::None => 0,
             Self::False => 1,
@@ -43,6 +43,7 @@ impl PartialOrd for UncertainBool {
 
 // -------------------- formatting --------------------
 
+/// Prints `true`, `false`, or `none`.
 impl core::fmt::Display for UncertainBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
@@ -53,6 +54,7 @@ impl core::fmt::Display for UncertainBool {
     }
 }
 
+/// Parses `"true"`, `"false"`, or `"none"`.
 impl core::str::FromStr for UncertainBool {
     type Err = crate::ParseError;
 
@@ -68,6 +70,7 @@ impl core::str::FromStr for UncertainBool {
 
 // -------------------- defaults --------------------
 
+/// Returns [`None`](UncertainBool::None).
 impl Default for UncertainBool {
     fn default() -> Self {
         Self::None
@@ -76,6 +79,7 @@ impl Default for UncertainBool {
 
 // -------------------- ops (Kleene three-valued logic) --------------------
 
+/// `!True → False`, `!False → True`, `!None → None`.
 impl core::ops::Not for UncertainBool {
     type Output = Self;
 
@@ -88,6 +92,7 @@ impl core::ops::Not for UncertainBool {
     }
 }
 
+/// `False` dominates; unknown propagates otherwise.
 impl core::ops::BitAnd for UncertainBool {
     type Output = Self;
 
@@ -100,6 +105,7 @@ impl core::ops::BitAnd for UncertainBool {
     }
 }
 
+/// `True` dominates; unknown propagates otherwise.
 impl core::ops::BitOr for UncertainBool {
     type Output = Self;
 
@@ -112,6 +118,7 @@ impl core::ops::BitOr for UncertainBool {
     }
 }
 
+/// Any `None` operand produces `None`.
 impl core::ops::BitXor for UncertainBool {
     type Output = Self;
 

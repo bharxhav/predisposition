@@ -18,19 +18,20 @@ pub enum OptimisticBool {
 
 // -------------------- identity --------------------
 
+/// Compares resolved values: `Assume` equals `True`.
 impl PartialEq for OptimisticBool {
     fn eq(&self, other: &Self) -> bool {
-        // Resolved: Assume == True (both resolve to true)
         match (self, other) {
             (Self::False, Self::False) => true,
             (Self::False, _) | (_, Self::False) => false,
-            _ => true, // True/Assume are all equal
+            _ => true,
         }
     }
 }
 
 impl Eq for OptimisticBool {}
 
+/// Orders by resolved value: `False < True`, `Assume` equals `True`.
 impl Ord for OptimisticBool {
     fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         let lhs = !matches!(self, Self::False);
@@ -45,9 +46,9 @@ impl PartialOrd for OptimisticBool {
     }
 }
 
+/// Hashes the resolved `bool`, consistent with [`Eq`].
 impl core::hash::Hash for OptimisticBool {
     fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-        // Hash the resolved bool so Hash is consistent with Eq
         match self {
             Self::True | Self::Assume => true.hash(state),
             Self::False => false.hash(state),
@@ -57,6 +58,7 @@ impl core::hash::Hash for OptimisticBool {
 
 // -------------------- formatting --------------------
 
+/// Prints `True`, `False`, or `AssumeTrue`.
 impl core::fmt::Debug for OptimisticBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
@@ -67,6 +69,7 @@ impl core::fmt::Debug for OptimisticBool {
     }
 }
 
+/// Prints `true`, `false`, or `assume_true`.
 impl core::fmt::Display for OptimisticBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
@@ -77,6 +80,7 @@ impl core::fmt::Display for OptimisticBool {
     }
 }
 
+/// Parses `"true"`, `"false"`, `"assume"`, or `"assume_true"`.
 impl core::str::FromStr for OptimisticBool {
     type Err = crate::ParseError;
 
@@ -92,6 +96,7 @@ impl core::str::FromStr for OptimisticBool {
 
 // -------------------- defaults --------------------
 
+/// Returns [`Assume`](OptimisticBool::Assume).
 impl Default for OptimisticBool {
     fn default() -> Self {
         Self::Assume
@@ -100,6 +105,7 @@ impl Default for OptimisticBool {
 
 // -------------------- ops --------------------
 
+/// Negation flips the predisposition: returns [`PessimisticBool`](crate::PessimisticBool).
 impl core::ops::Not for OptimisticBool {
     type Output = crate::PessimisticBool;
 
@@ -112,6 +118,7 @@ impl core::ops::Not for OptimisticBool {
     }
 }
 
+/// Resolves both operands to `bool`, then ANDs.
 impl core::ops::BitAnd for OptimisticBool {
     type Output = Self;
 
@@ -120,6 +127,7 @@ impl core::ops::BitAnd for OptimisticBool {
     }
 }
 
+/// Resolves both operands to `bool`, then ORs.
 impl core::ops::BitOr for OptimisticBool {
     type Output = Self;
 
@@ -128,6 +136,7 @@ impl core::ops::BitOr for OptimisticBool {
     }
 }
 
+/// Resolves both operands to `bool`, then XORs.
 impl core::ops::BitXor for OptimisticBool {
     type Output = Self;
 
