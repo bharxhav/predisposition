@@ -74,7 +74,7 @@ impl core::str::FromStr for PessimisticBool {
 
 impl Default for PessimisticBool {
     fn default() -> Self {
-        Self::False
+        Self::Assume
     }
 }
 

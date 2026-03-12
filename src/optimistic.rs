@@ -74,7 +74,7 @@ impl core::str::FromStr for OptimisticBool {
 
 impl Default for OptimisticBool {
     fn default() -> Self {
-        Self::True
+        Self::Assume
     }
 }
 
