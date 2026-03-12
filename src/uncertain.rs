@@ -16,6 +16,8 @@ pub enum UncertainBool {
     None,
 }
 
+// -------------------- identity --------------------
+
 impl Ord for UncertainBool {
     fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         // None < False < True (mirrors Option<bool>)
@@ -38,6 +40,8 @@ impl PartialOrd for UncertainBool {
         Some(self.cmp(other))
     }
 }
+
+// -------------------- formatting --------------------
 
 impl core::fmt::Display for UncertainBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -62,28 +66,27 @@ impl core::str::FromStr for UncertainBool {
     }
 }
 
+// -------------------- defaults --------------------
+
 impl Default for UncertainBool {
     fn default() -> Self {
         Self::None
     }
 }
 
-#[cfg(feature = "serde")]
-impl serde::Serialize for UncertainBool {
-    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.serialize_str(&self.to_string())
+// -------------------- ops (Kleene three-valued logic) --------------------
+
+impl core::ops::Not for UncertainBool {
+    type Output = Self;
+
+    fn not(self) -> Self {
+        match self {
+            Self::True => Self::False,
+            Self::False => Self::True,
+            Self::None => Self::None,
+        }
     }
 }
-
-#[cfg(feature = "serde")]
-impl<'de> serde::Deserialize<'de> for UncertainBool {
-    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let s = String::deserialize(deserializer)?;
-        s.parse().map_err(serde::de::Error::custom)
-    }
-}
-
-// Kleene three-valued logic.
 
 impl core::ops::BitAnd for UncertainBool {
     type Output = Self;
@@ -139,14 +142,19 @@ impl core::ops::BitXorAssign for UncertainBool {
     }
 }
 
-impl core::ops::Not for UncertainBool {
-    type Output = Self;
+// -------------------- serde --------------------
 
-    fn not(self) -> Self {
-        match self {
-            Self::True => Self::False,
-            Self::False => Self::True,
-            Self::None => Self::None,
-        }
+#[cfg(feature = "serde")]
+impl serde::Serialize for UncertainBool {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for UncertainBool {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let s = String::deserialize(deserializer)?;
+        s.parse().map_err(serde::de::Error::custom)
     }
 }

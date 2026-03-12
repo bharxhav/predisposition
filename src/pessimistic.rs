@@ -16,6 +16,8 @@ pub enum PessimisticBool {
     Assume,
 }
 
+// -------------------- identity --------------------
+
 impl PartialEq for PessimisticBool {
     fn eq(&self, other: &Self) -> bool {
         // Resolved: Assume == False (both resolve to false)
@@ -53,6 +55,8 @@ impl core::hash::Hash for PessimisticBool {
     }
 }
 
+// -------------------- formatting --------------------
+
 impl core::fmt::Debug for PessimisticBool {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
@@ -86,24 +90,25 @@ impl core::str::FromStr for PessimisticBool {
     }
 }
 
+// -------------------- defaults --------------------
+
 impl Default for PessimisticBool {
     fn default() -> Self {
         Self::Assume
     }
 }
 
-#[cfg(feature = "serde")]
-impl serde::Serialize for PessimisticBool {
-    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.serialize_str(&self.to_string())
-    }
-}
+// -------------------- ops --------------------
 
-#[cfg(feature = "serde")]
-impl<'de> serde::Deserialize<'de> for PessimisticBool {
-    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let s = String::deserialize(deserializer)?;
-        s.parse().map_err(serde::de::Error::custom)
+impl core::ops::Not for PessimisticBool {
+    type Output = crate::OptimisticBool;
+
+    fn not(self) -> crate::OptimisticBool {
+        match self {
+            Self::True => crate::OptimisticBool::False,
+            Self::False => crate::OptimisticBool::True,
+            Self::Assume => crate::OptimisticBool::Assume,
+        }
     }
 }
 
@@ -149,14 +154,19 @@ impl core::ops::BitXorAssign for PessimisticBool {
     }
 }
 
-impl core::ops::Not for PessimisticBool {
-    type Output = crate::OptimisticBool;
+// -------------------- serde --------------------
 
-    fn not(self) -> crate::OptimisticBool {
-        match self {
-            Self::True => crate::OptimisticBool::False,
-            Self::False => crate::OptimisticBool::True,
-            Self::Assume => crate::OptimisticBool::Assume,
-        }
+#[cfg(feature = "serde")]
+impl serde::Serialize for PessimisticBool {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for PessimisticBool {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let s = String::deserialize(deserializer)?;
+        s.parse().map_err(serde::de::Error::custom)
     }
 }
