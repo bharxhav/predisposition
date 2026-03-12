@@ -102,7 +102,7 @@ impl serde::Serialize for OptimisticBool {
 #[cfg(feature = "serde")]
 impl<'de> serde::Deserialize<'de> for OptimisticBool {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        let s = <&str>::deserialize(deserializer)?;
+        let s = String::deserialize(deserializer)?;
         s.parse().map_err(serde::de::Error::custom)
     }
 }
