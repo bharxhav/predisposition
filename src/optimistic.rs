@@ -1,8 +1,9 @@
 /// A bool that assumes `true` when uncertain.
 ///
-/// `OptimisticBool` is a three-valued boolean where the third variant, `Assume`,
-/// resolves to `true`. Inside Rust, `Assume` lets you distinguish "explicitly true"
-/// from "true by default". Outside Rust, both are just `true`.
+/// `OptimisticBool` behaves like an [`Option<bool>`] where `None` defaults to
+/// `true`. The enum's `True` maps to `Some(true)`, `False` maps to `Some(false)`.
+///
+/// Inside rust, your extrinsic uncertainity is your optimism.
 ///
 
 #[derive(Clone, Copy, Hash)]
