@@ -83,6 +83,62 @@ impl<'de> serde::Deserialize<'de> for UncertainBool {
     }
 }
 
+// Kleene three-valued logic.
+
+impl core::ops::BitAnd for UncertainBool {
+    type Output = Self;
+
+    fn bitand(self, rhs: Self) -> Self {
+        match (self, rhs) {
+            (Self::False, _) | (_, Self::False) => Self::False,
+            (Self::True, Self::True) => Self::True,
+            _ => Self::None,
+        }
+    }
+}
+
+impl core::ops::BitOr for UncertainBool {
+    type Output = Self;
+
+    fn bitor(self, rhs: Self) -> Self {
+        match (self, rhs) {
+            (Self::True, _) | (_, Self::True) => Self::True,
+            (Self::False, Self::False) => Self::False,
+            _ => Self::None,
+        }
+    }
+}
+
+impl core::ops::BitXor for UncertainBool {
+    type Output = Self;
+
+    fn bitxor(self, rhs: Self) -> Self {
+        match (self, rhs) {
+            (Self::None, _) | (_, Self::None) => Self::None,
+            (Self::True, Self::True) | (Self::False, Self::False) => Self::False,
+            _ => Self::True,
+        }
+    }
+}
+
+impl core::ops::BitAndAssign for UncertainBool {
+    fn bitand_assign(&mut self, rhs: Self) {
+        *self = *self & rhs;
+    }
+}
+
+impl core::ops::BitOrAssign for UncertainBool {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = *self | rhs;
+    }
+}
+
+impl core::ops::BitXorAssign for UncertainBool {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        *self = *self ^ rhs;
+    }
+}
+
 impl core::ops::Not for UncertainBool {
     type Output = Self;
 

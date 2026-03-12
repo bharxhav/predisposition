@@ -107,6 +107,48 @@ impl<'de> serde::Deserialize<'de> for PessimisticBool {
     }
 }
 
+impl core::ops::BitAnd for PessimisticBool {
+    type Output = Self;
+
+    fn bitand(self, rhs: Self) -> Self {
+        if bool::from(self) & bool::from(rhs) { Self::True } else { Self::False }
+    }
+}
+
+impl core::ops::BitOr for PessimisticBool {
+    type Output = Self;
+
+    fn bitor(self, rhs: Self) -> Self {
+        if bool::from(self) | bool::from(rhs) { Self::True } else { Self::False }
+    }
+}
+
+impl core::ops::BitXor for PessimisticBool {
+    type Output = Self;
+
+    fn bitxor(self, rhs: Self) -> Self {
+        if bool::from(self) ^ bool::from(rhs) { Self::True } else { Self::False }
+    }
+}
+
+impl core::ops::BitAndAssign for PessimisticBool {
+    fn bitand_assign(&mut self, rhs: Self) {
+        *self = *self & rhs;
+    }
+}
+
+impl core::ops::BitOrAssign for PessimisticBool {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = *self | rhs;
+    }
+}
+
+impl core::ops::BitXorAssign for PessimisticBool {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        *self = *self ^ rhs;
+    }
+}
+
 impl core::ops::Not for PessimisticBool {
     type Output = crate::OptimisticBool;
 
