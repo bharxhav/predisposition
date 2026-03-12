@@ -11,6 +11,7 @@
 mod optimistic;
 mod pessimistic;
 mod uncertain;
+mod ext;
 
 pub use optimistic::OptimisticBool;
 pub use pessimistic::PessimisticBool;
