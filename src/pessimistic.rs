@@ -6,7 +6,7 @@
 /// Inside rust, your extrinsic uncertainity is your pessimism.
 ///
 
-#[derive(Clone, Copy, Hash)]
+#[derive(Clone, Copy)]
 pub enum PessimisticBool {
     /// Explicitly true.
     True,
@@ -14,6 +14,29 @@ pub enum PessimisticBool {
     False,
     /// Unknown but pessimistically assumed to be `false`.
     Assume,
+}
+
+impl PartialEq for PessimisticBool {
+    fn eq(&self, other: &Self) -> bool {
+        // Resolved: Assume == False (both resolve to false)
+        match (self, other) {
+            (Self::True, Self::True) => true,
+            (Self::True, _) | (_, Self::True) => false,
+            _ => true, // False/Assume are all equal
+        }
+    }
+}
+
+impl Eq for PessimisticBool {}
+
+impl core::hash::Hash for PessimisticBool {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        // Hash the resolved bool so Hash is consistent with Eq
+        match self {
+            Self::True => true.hash(state),
+            Self::False | Self::Assume => false.hash(state),
+        }
+    }
 }
 
 impl core::fmt::Debug for PessimisticBool {

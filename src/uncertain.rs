@@ -6,7 +6,7 @@
 /// the unknown case.
 ///
 
-#[derive(Debug, Clone, Copy, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum UncertainBool {
     /// Explicitly true (`Some(true)`).
     True,
