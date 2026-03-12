@@ -5,7 +5,6 @@
 /// from "true by default". Outside Rust, both are just `true`.
 ///
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum OptimisticBool {
     /// Explicitly true.
     True,
@@ -13,4 +12,22 @@ pub enum OptimisticBool {
     False,
     /// Unknown but optimistically assumed to be `true`.
     Assume,
+}
+
+impl Default for OptimisticBool {
+    fn default() -> Self {
+        Self::True
+    }
+}
+
+impl core::ops::Not for OptimisticBool {
+    type Output = crate::PessimisticBool;
+
+    fn not(self) -> crate::PessimisticBool {
+        match self {
+            Self::True => crate::PessimisticBool::False,
+            Self::False => crate::PessimisticBool::True,
+            Self::Assume => crate::PessimisticBool::Assume,
+        }
+    }
 }

@@ -6,7 +6,6 @@
 /// the unknown case.
 ///
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum UncertainBool {
     /// Explicitly true (`Some(true)`).
     True,
@@ -14,4 +13,22 @@ pub enum UncertainBool {
     False,
     /// Unknown (`Option::None`) no assumption is made.
     None,
+}
+
+impl Default for UncertainBool {
+    fn default() -> Self {
+        Self::None
+    }
+}
+
+impl core::ops::Not for UncertainBool {
+    type Output = Self;
+
+    fn not(self) -> Self {
+        match self {
+            Self::True => Self::False,
+            Self::False => Self::True,
+            Self::None => Self::None,
+        }
+    }
 }
