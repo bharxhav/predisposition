@@ -2,6 +2,11 @@
 name = "predisposition"
 version = "1.0.0"
 edition = "2024"
+description = "Three-valued boolean types with different predispositions for the unknown case"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/bharxhav/predisposition"
+keywords = ["bool", "three-valued", "logic", "optional"]
+categories = ["data-structures", "no-std"]
 
 [dependencies]
 serde = { version = "1.0.228", features = ["derive"], optional = true }
