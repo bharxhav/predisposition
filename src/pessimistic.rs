@@ -123,7 +123,11 @@ impl core::ops::BitAnd for PessimisticBool {
     type Output = Self;
 
     fn bitand(self, rhs: Self) -> Self {
-        if bool::from(self) & bool::from(rhs) { Self::True } else { Self::False }
+        if bool::from(self) & bool::from(rhs) {
+            Self::True
+        } else {
+            Self::False
+        }
     }
 }
 
@@ -132,7 +136,11 @@ impl core::ops::BitOr for PessimisticBool {
     type Output = Self;
 
     fn bitor(self, rhs: Self) -> Self {
-        if bool::from(self) | bool::from(rhs) { Self::True } else { Self::False }
+        if bool::from(self) | bool::from(rhs) {
+            Self::True
+        } else {
+            Self::False
+        }
     }
 }
 
@@ -141,7 +149,11 @@ impl core::ops::BitXor for PessimisticBool {
     type Output = Self;
 
     fn bitxor(self, rhs: Self) -> Self {
-        if bool::from(self) ^ bool::from(rhs) { Self::True } else { Self::False }
+        if bool::from(self) ^ bool::from(rhs) {
+            Self::True
+        } else {
+            Self::False
+        }
     }
 }
 

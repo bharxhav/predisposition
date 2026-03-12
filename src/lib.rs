@@ -8,10 +8,10 @@
 //! - [`PessimisticBool`] assumes `false` when uncertain.
 //! - [`UncertainBool`]  makes no assumption; behaves exactly like `Option<bool>`.
 
+mod ext;
 mod optimistic;
 mod pessimistic;
 mod uncertain;
-mod ext;
 
 pub use optimistic::OptimisticBool;
 pub use pessimistic::PessimisticBool;
