@@ -5,6 +5,7 @@
 /// from "true by default". Outside Rust, both are just `true`.
 ///
 
+#[derive(Clone, Copy, Hash)]
 pub enum OptimisticBool {
     /// Explicitly true.
     True,
